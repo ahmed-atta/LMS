@@ -3,17 +3,7 @@ class BooksController extends AppController {
     public $helpers = array('Html', 'Form');
    	public $uses = array('Category');
 
-    public function isAuthorized($user) {
-	    if (in_array($this->action, array('add','edit', 'delete'))) {
-	        // Admin can access every action
-		    if (isset($user['role']) && $user['role'] === 'admin') {
-		        return true;
-		    }
-	    }
-    return parent::isAuthorized($user);
- }
-
-
+    
     public function index() {
         $this->set('books', $this->Category->Book->find('all'));
     }
@@ -53,7 +43,7 @@ class BooksController extends AppController {
 			// Set the file-name only to save in the database
 			$this->request->data['Book']['picture'] = $picture;
 			// Initialize filename-variable
-			$download = null;
+			$download = '';
 
 			if (
 			    !empty($this->request->data['Book']['download']['tmp_name'])
@@ -65,10 +55,10 @@ class BooksController extends AppController {
 			        $this->request->data['Book']['download']['tmp_name'],
 			        WWW_ROOT . DS . 'documents' . DS . $download
 			    );
-			}
 
-			// Set the file-name only to save in the database
+			}
 			$this->request->data['Book']['download'] = $download;
+			
 
 
             $this->Category->Book->create();
